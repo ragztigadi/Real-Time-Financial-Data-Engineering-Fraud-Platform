@@ -1,0 +1,27 @@
+[project]
+name = "realtime-fraud-platform"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+
+dependencies = [
+    "websockets==13.1",
+    "pydantic==2.9.2",
+    "pydantic-settings==2.6.1",
+    "tenacity==9.0.0",
+    "orjson==3.10.11",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.3",
+    "pytest-asyncio==0.24.0",
+    "ruff==0.7.4",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
