@@ -46,6 +46,10 @@ class AggTrade(BaseModel):
     def trade_time(self) -> datetime:
         return datetime.fromtimestamp(self.trade_time_ms / 1000, tz=timezone.utc)
     
+    @property
+    def notional(self) -> Decimal:
+        return self.price * self.quantity
+    
     # DE-DUP duplicates:
     @property
     def dedup_key(self)->str:

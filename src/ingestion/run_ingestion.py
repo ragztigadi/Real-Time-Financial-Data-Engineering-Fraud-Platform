@@ -24,3 +24,42 @@ async def main()-> None:
         backoff_base=settings.ws_backoff_base_seconds,
         backoff_max=settings.ws_backoff_max_seconds
     )
+    
+    logger.info("starting ingestion", extra={"url":client.url})
+
+    processed = 0
+    failed = 0
+
+    async for message in client.stream():
+        payload = message.get("data", message)
+
+        try:
+            trade = AggTrade.model_validate(payload)
+        except Exception as exc:
+            failed += 1
+            logger.warning(
+                "validation failed",
+                extra={"error": str(exc), "raw":payload, "failed_total":failed},
+            )
+            continue
+
+        processed += 1
+
+        if processed % 1 == 0:
+            logger.info(
+                "heartbeat",
+                extra={
+                    "processed": processed,
+                    "failed": failed,
+                    "last_symbol": trade.symbol,
+                    "last_dedup_key": trade.dedup_key,
+                    "exchange_lag_ms": trade.event_time_ms - trade.trade_time_ms,
+                },
+            )
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("stopped by user")
