@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # binance source
     binance_ws_url: str
     binance_symbols: str
-    binance_stream_type: str = "aggTrade"
+    binance_stream_types: str = "aggTrade,bookTicker"
 
     # reconnect policy
     ws_ping_interval_seconds: float = Field(default=20.0, gt=0)
@@ -63,9 +63,17 @@ class Settings(BaseSettings):
         return [s.strip().lower() for s in self.binance_symbols.split(",") if s.strip()]
 
     @property
+    def stream_types(self) -> list[str]:
+        return [t.strip() for t in self.binance_stream_types.split(",") if t.strip()]
+
+    @property
     def stream_names(self) -> list[str]:
-        """Binance stream identifiers, e.g. 'btcusdt@aggTrade'."""
-        return [f"{sym}@{self.binance_stream_type}" for sym in self.symbol_list]
+        """Cartesian product: every symbol x every stream type."""
+        return [
+            f"{sym}@{stream_type}"
+            for sym in self.symbol_list
+            for stream_type in self.stream_types
+        ]
 
     def ensure_dirs(self) -> None:
         for d in (self.raw_output_dir, self.rejected_output_dir, self.checkpoint_dir):
