@@ -11,6 +11,7 @@ from src.ingestion.models.trade import AggTrade
 from src.ingestion.models.book_ticker import BookTicker
 from src.ingestion.models.envelope import EventEnvelope, make_event_id
 from src.ingestion.writer import JsonlWriter
+from src.ingestion.dedup import  DedupCache
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,7 @@ async def main() -> None:
     logger.info("starting ingestion", extra={"url": client.url})
 
     writer = JsonlWriter(settings.raw_output_dir, prefix="binance")
+    dedup = DedupCache(max_size=100_000)
 
     processed = 0
     failed = 0
@@ -81,6 +83,8 @@ async def main() -> None:
                 ),
                 payload=event.model_dump(mode="json", by_alias=True),
             )
+            if dedup.is_duplicate(envelope.event_id):
+                continue
             writer.write(envelope.model_dump_json())
 
             if processed % 100 == 0:
@@ -91,6 +95,8 @@ async def main() -> None:
                         "failed": failed,
                         "agg_trades": counts["aggTrade"],
                         "book_tickers": counts["bookTicker"],
+                        "duplicates": dedup.duplicates_seen,
+                        "dedup_size": dedup.size,
                         "last_symbol": event.symbol,
                         "last_dedup_key": event.dedup_key,
                     },
