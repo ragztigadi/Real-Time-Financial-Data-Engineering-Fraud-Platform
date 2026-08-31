@@ -21,6 +21,19 @@ wheels = [
 ]
 
 [[package]]
+name = "confluent-kafka"
+version = "2.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cf/b0/164b7e8afb80bf5ff7fc25f793b37f6e5cc118d05fbd6b5e6d4a484a7634/confluent-kafka-2.6.0.tar.gz", hash = "sha256:f7afe69639bd2ab15404dd46a76e06213342a23cb5642d873342847cb2198c87", size = 138921, upload-time = "2024-10-10T22:40:39.347Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/05/aefd26cf1f1e775c59c6e75e155b498c4534ada273d6d5850319779881e3/confluent_kafka-2.6.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:b6343f83052c6a6234a9c12cfa764a8b7440dbe0d293027606e314827fa7ad6a", size = 3421335, upload-time = "2024-10-10T22:38:15.848Z" },
+    { url = "https://files.pythonhosted.org/packages/77/48/02b979c103c698862af476862d7be967810d94c6055ad6389574789139e5/confluent_kafka-2.6.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:1a26e91200bbd0f09effe4d2f3b524c959c4a8925b62cb022676aeb223195f96", size = 2952599, upload-time = "2024-10-10T22:38:18.571Z" },
+    { url = "https://files.pythonhosted.org/packages/08/8f/255f0af1574d72cd6a0cdc32e928836225042f8c8612a3cd97c79ed3c259/confluent_kafka-2.6.0-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:6830b17a7c2253b95b873b3cf0fe877ce882e348cfcf9d4d939ade5626f87b1d", size = 15134371, upload-time = "2024-10-10T22:38:25.992Z" },
+    { url = "https://files.pythonhosted.org/packages/24/9c/de07ae5103e2b6a6592eabb04dbace223d27226bceed4a540d862be0c712/confluent_kafka-2.6.0-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:7a9a58472e23112043e9a36e048241bccc3fd211f066fba778c070f0eafa35c8", size = 3927796, upload-time = "2024-10-10T22:38:29.762Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/b9/bdcc6a64eaa8e15d478bb3ca05c99a9449cb90ac7680f120438ee704d372/confluent_kafka-2.6.0-cp311-cp311-win_amd64.whl", hash = "sha256:c134c1afdc6c83c82228a3bec9550a62748ec4cd9b6913efed4f4e903db321cc", size = 3558976, upload-time = "2024-10-10T22:38:32.591Z" },
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -156,6 +169,7 @@ name = "realtime-fraud-platform"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "confluent-kafka" },
     { name = "orjson" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
@@ -172,6 +186,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "confluent-kafka", specifier = "==2.6.0" },
     { name = "orjson", specifier = "==3.10.11" },
     { name = "pydantic", specifier = "==2.9.2" },
     { name = "pydantic-settings", specifier = "==2.6.1" },

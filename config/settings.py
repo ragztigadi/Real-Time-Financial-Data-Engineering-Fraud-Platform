@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     rejected_output_dir: Path = Path("data/rejected")
     checkpoint_dir: Path = Path("data/checkpoints")
 
+    # kafka
+    kafka_bootstrap_servers: str = "localhost:19092"
+    kafka_topic_trades: str = "binance.trades.v1"
+    kafka_topic_quotes: str = "binance.quotes.v1"
+    kafka_topic_dlq: str = "binance.dlq.v1"
+
     @field_validator("binance_ws_url")
     @classmethod
     def _check_ws_url(cls, v: str) -> str:
