@@ -1,0 +1,32 @@
+{
+  "name": "ops-postgres-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "fraud",
+    "database.password": "fraud",
+    "database.dbname": "fraud_platform",
+
+    "topic.prefix": "ops",
+    "schema.include.list": "ops",
+    "table.include.list": "ops.customers,ops.accounts",
+
+    "plugin.name": "pgoutput",
+    "slot.name": "fraud_slot",
+    "publication.name": "fraud_publication",
+    "publication.autocreate.mode": "filtered",
+
+    "snapshot.mode": "initial",
+    "tombstones.on.delete": "true",
+    "decimal.handling.mode": "string",
+    "time.precision.mode": "connect",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}
