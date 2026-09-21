@@ -10,3 +10,4 @@ data/raw/*
 data/rejected/*
 data/checkpoints/*
 !data/**/.gitkeep
+aws/*
