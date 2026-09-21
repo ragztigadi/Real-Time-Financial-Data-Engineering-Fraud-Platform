@@ -48,6 +48,15 @@ class Settings(BaseSettings):
     kafka_topic_quotes: str = "binance.quotes.v1"
     kafka_topic_dlq: str = "binance.dlq.v1"
 
+    # aws / s3
+    aws_region: str = "us-east-1"
+    aws_access_key_id: str = ""
+    aws_secret_access_key: str = ""
+    s3_bucket: str = ""
+    bronze_path: str = ""
+    silver_path: str = ""
+    gold_path: str = ""
+
     @field_validator("binance_ws_url")
     @classmethod
     def _check_ws_url(cls, v: str) -> str:

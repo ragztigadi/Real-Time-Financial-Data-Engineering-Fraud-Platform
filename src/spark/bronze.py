@@ -57,5 +57,5 @@ def run_bronze(spark: SparkSession, settings) -> None:
 
 if __name__ == "__main__":
     settings = get_settings()
-    spark = get_spark_session("bronze-ingest")
+    spark = get_spark_session("bronze-ingest", settings=settings)
     run_bronze(spark, settings)
