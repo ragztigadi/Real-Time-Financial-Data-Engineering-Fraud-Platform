@@ -16,6 +16,7 @@ def get_spark_session(app_name: str, *, local: bool = True, settings=None) -> Sp
         .config("spark.sql.streaming.checkpointLocation", "data/checkpoints/spark")
         .config("spark.sql.shuffle.partitions", "4")
         .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+        .config("spark.sql.caseSensitive", "true")
     )
 
     if settings and settings.aws_access_key_id:
