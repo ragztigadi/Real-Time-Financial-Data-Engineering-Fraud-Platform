@@ -57,6 +57,18 @@ class Settings(BaseSettings):
     silver_path: str = ""
     gold_path: str = ""
 
+    # snowflake
+    snowflake_account: str = ""
+    snowflake_user: str = ""
+    snowflake_password: str = ""
+    snowflake_warehouse: str = "fraud_wh"
+    snowflake_database: str = "fraud_platform"
+    snowflake_role: str = "ACCOUNTADMIN"
+
+    # aws role for snowflake integration
+    snowflake_s3_role_arn: str = ""
+    snowflake_s3_allowed_location: str = ""
+
     @field_validator("binance_ws_url")
     @classmethod
     def _check_ws_url(cls, v: str) -> str:
