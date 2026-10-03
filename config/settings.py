@@ -69,6 +69,9 @@ class Settings(BaseSettings):
     snowflake_s3_role_arn: str = ""
     snowflake_s3_allowed_location: str = ""
 
+    # Slack Alerts 
+    slack_webhook_url: str = ""
+
     @field_validator("binance_ws_url")
     @classmethod
     def _check_ws_url(cls, v: str) -> str:
@@ -110,3 +113,4 @@ class Settings(BaseSettings):
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings()  # type: ignore[call-arg]
+
