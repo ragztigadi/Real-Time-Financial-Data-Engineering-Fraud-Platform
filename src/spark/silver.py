@@ -149,7 +149,7 @@ def run_silver(spark: SparkSession, settings) -> None:
     trades_silver = process_trades(envelope)
     quotes_silver = process_quotes(envelope)
 
-    trades_query = (
+    _trades_query = (
         trades_silver.writeStream
         .format("parquet")
         .outputMode("append")
@@ -160,7 +160,7 @@ def run_silver(spark: SparkSession, settings) -> None:
         .start()
     )
 
-    quotes_query = (
+    _quotes_query = (
         quotes_silver.writeStream
         .format("parquet")
         .outputMode("append")

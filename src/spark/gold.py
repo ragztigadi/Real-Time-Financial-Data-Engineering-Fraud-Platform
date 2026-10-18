@@ -95,7 +95,7 @@ def run_gold(spark: SparkSession, settings)->None:
         )
     )
 
-    volume_query = (
+    _volume_query = (
         volume_agg.writeStream
         .format("parquet")
         .outputMode("append")
@@ -107,7 +107,7 @@ def run_gold(spark: SparkSession, settings)->None:
         .start()
     )
 
-    side_query = (
+    _side_query = (
         side_agg.writeStream
         .format("parquet")
         .option("path", f"{settings.gold_path}/side_imbalance_1m")
