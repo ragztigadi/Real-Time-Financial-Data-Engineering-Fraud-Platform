@@ -14,6 +14,7 @@ dependencies = [
     "snowflake-connector-python==3.12.3",
     "requests==2.32.3",
     "pyopenssl==24.2.1",
+    "mypy==1.13.0",
     "cryptography==43.0.1",
 ]
 
