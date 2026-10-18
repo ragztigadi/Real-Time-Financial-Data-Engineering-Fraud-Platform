@@ -11,6 +11,7 @@ from src.alerts.slack import SlackAlerter
 
 logger = logging.getLogger(__name__)
 
+
 def run_notifier() -> None:
     settings = get_settings()
     alerter = SlackAlerter(settings.slack_webhook_url)
@@ -47,8 +48,16 @@ def run_notifier() -> None:
         sent = 0
 
         for row in alerts:
-            alert_id, rule_name, symbol, window_start, severity, \
-            alert_value, threshold_value, details = row
+            (
+                alert_id,
+                rule_name,
+                symbol,
+                window_start,
+                severity,
+                alert_value,
+                threshold_value,
+                details,
+            ) = row
 
             success = alerter.send_fraud_alert(
                 rule_name=rule_name,
@@ -61,11 +70,14 @@ def run_notifier() -> None:
             )
 
             if success:
-                cur.execute("""
+                cur.execute(
+                    """
                     UPDATE fraud_platform.transformed.fraud_alerts
                     SET is_investigated = TRUE
                     WHERE alert_id = %s
-                """, (alert_id,))
+                """,
+                    (alert_id,),
+                )
                 sent += 1
 
         conn.commit()
@@ -74,8 +86,10 @@ def run_notifier() -> None:
     finally:
         conn.close()
 
+
 if __name__ == "__main__":
     from src.common.logging_config import configure_logging, new_correlation_id
+
     settings = get_settings()
     configure_logging(settings.log_level, settings.service_name, settings.environment)
     new_correlation_id()

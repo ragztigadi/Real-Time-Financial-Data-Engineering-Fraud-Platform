@@ -21,8 +21,7 @@ def get_spark_session(app_name: str, *, local: bool = True, settings=None) -> Sp
 
     if settings and settings.aws_access_key_id:
         builder = (
-            builder
-            .config("spark.hadoop.fs.s3a.access.key", settings.aws_access_key_id)
+            builder.config("spark.hadoop.fs.s3a.access.key", settings.aws_access_key_id)
             .config("spark.hadoop.fs.s3a.secret.key", settings.aws_secret_access_key)
             .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com")
         )

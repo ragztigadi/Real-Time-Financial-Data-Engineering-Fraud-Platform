@@ -95,9 +95,7 @@ async def main() -> None:
                 source="binance.us",
                 partition_key=event.symbol,
                 occurred_at=(
-                    event.trade_time
-                    if stream_type == "aggTrade"
-                    else datetime.now(tz=timezone.utc)
+                    event.trade_time if stream_type == "aggTrade" else datetime.now(tz=timezone.utc)
                 ),
                 payload=event.model_dump(mode="json", by_alias=True),
             )

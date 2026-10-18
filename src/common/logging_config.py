@@ -12,9 +12,11 @@ from typing import Any
 
 correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="-")
 
-_RESERVED = set(
-    logging.LogRecord("", 0, "", 0, "", None, None).__dict__.keys()
-) | {"message", "asctime", "taskName"}
+_RESERVED = set(logging.LogRecord("", 0, "", 0, "", None, None).__dict__.keys()) | {
+    "message",
+    "asctime",
+    "taskName",
+}
 
 
 class JsonFormatter(logging.Formatter):

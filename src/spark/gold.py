@@ -12,26 +12,29 @@ from src.spark.session import get_spark_session
 
 logger = logging.getLogger(__name__)
 
-SILVER_TRADES_SCHEMA = T.StructType([
-    T.StructField("event_id", T.StringType()),
-    T.StructField("schema_version", T.StringType()),
-    T.StructField("source", T.StringType()),
-    T.StructField("symbol", T.StringType()),
-    T.StructField("occurred_at", T.TimestampType()),
-    T.StructField("ingested_at", T.TimestampType()),
-    T.StructField("agg_trade_id", T.LongType()),
-    T.StructField("raw_symbol", T.StringType()),
-    T.StructField("price", T.DecimalType(18, 8)),
-    T.StructField("quantity", T.DecimalType(18, 8)),
-    T.StructField("notional", T.DecimalType(37, 16)),
-    T.StructField("trade_time_ms", T.LongType()),
-    T.StructField("is_buyer_maker", T.BooleanType()),
-    T.StructField("trade_time", T.TimestampType()),
-    T.StructField("date", T.DateType()),
-    T.StructField("hour", T.IntegerType()),
-])
+SILVER_TRADES_SCHEMA = T.StructType(
+    [
+        T.StructField("event_id", T.StringType()),
+        T.StructField("schema_version", T.StringType()),
+        T.StructField("source", T.StringType()),
+        T.StructField("symbol", T.StringType()),
+        T.StructField("occurred_at", T.TimestampType()),
+        T.StructField("ingested_at", T.TimestampType()),
+        T.StructField("agg_trade_id", T.LongType()),
+        T.StructField("raw_symbol", T.StringType()),
+        T.StructField("price", T.DecimalType(18, 8)),
+        T.StructField("quantity", T.DecimalType(18, 8)),
+        T.StructField("notional", T.DecimalType(37, 16)),
+        T.StructField("trade_time_ms", T.LongType()),
+        T.StructField("is_buyer_maker", T.BooleanType()),
+        T.StructField("trade_time", T.TimestampType()),
+        T.StructField("date", T.DateType()),
+        T.StructField("hour", T.IntegerType()),
+    ]
+)
 
-def run_gold(spark: SparkSession, settings)->None:
+
+def run_gold(spark: SparkSession, settings) -> None:
     trades = (
         spark.readStream.format("parquet")
         .option("path", f"{settings.silver_path}/trades")
@@ -43,8 +46,7 @@ def run_gold(spark: SparkSession, settings)->None:
     # Used by: velocity checks, amount anomaly detection
 
     volume_agg = (
-        trades
-        .withWatermark("occurred_at", "5 minutes")
+        trades.withWatermark("occurred_at", "5 minutes")
         .groupBy(
             F.window(F.col("occurred_at"), "1 minute"),
             F.col("symbol"),
@@ -73,8 +75,7 @@ def run_gold(spark: SparkSession, settings)->None:
     # 2. Buyer/seller imbalance — feeds pattern detection
 
     side_agg = (
-        trades
-        .withWatermark("occurred_at", "5 minutes")
+        trades.withWatermark("occurred_at", "5 minutes")
         .groupBy(
             F.window("occurred_at", "1 minute"),
             F.col("symbol"),
@@ -96,23 +97,19 @@ def run_gold(spark: SparkSession, settings)->None:
     )
 
     _volume_query = (
-        volume_agg.writeStream
-        .format("parquet")
+        volume_agg.writeStream.format("parquet")
         .outputMode("append")
         .option("path", f"{settings.gold_path}/volume_1m")
-        .option("checkpointLocation",
-                f"{settings.gold_path}/_checkpoints/volume_1m")
-        .partitionBy("date","hour")
+        .option("checkpointLocation", f"{settings.gold_path}/_checkpoints/volume_1m")
+        .partitionBy("date", "hour")
         .trigger(processingTime="60 seconds")
         .start()
     )
 
     _side_query = (
-        side_agg.writeStream
-        .format("parquet")
+        side_agg.writeStream.format("parquet")
         .option("path", f"{settings.gold_path}/side_imbalance_1m")
-        .option("checkpointLocation",
-                f"{settings.gold_path}/_checkpoints/side_imbalance_1m")
+        .option("checkpointLocation", f"{settings.gold_path}/_checkpoints/side_imbalance_1m")
         .partitionBy("date", "hour")
         .trigger(processingTime="60 seconds")
         .start()
@@ -127,6 +124,7 @@ def run_gold(spark: SparkSession, settings)->None:
     )
 
     spark.streams.awaitAnyTermination()
+
 
 if __name__ == "__main__":
     settings = get_settings()

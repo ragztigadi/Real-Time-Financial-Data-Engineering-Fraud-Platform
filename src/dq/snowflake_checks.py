@@ -6,7 +6,6 @@ from src.dq.checks import DQFramework
 
 
 def run_all_checks(framework: DQFramework) -> None:
-
     # 1. Null checks
     framework.run_check(
         sql="""

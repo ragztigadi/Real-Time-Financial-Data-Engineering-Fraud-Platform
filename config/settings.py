@@ -69,7 +69,7 @@ class Settings(BaseSettings):
     snowflake_s3_role_arn: str = ""
     snowflake_s3_allowed_location: str = ""
 
-    # Slack Alerts 
+    # Slack Alerts
     slack_webhook_url: str = ""
 
     @field_validator("binance_ws_url")
@@ -100,9 +100,7 @@ class Settings(BaseSettings):
     def stream_names(self) -> list[str]:
         """Cartesian product: every symbol x every stream type."""
         return [
-            f"{sym}@{stream_type}"
-            for sym in self.symbol_list
-            for stream_type in self.stream_types
+            f"{sym}@{stream_type}" for sym in self.symbol_list for stream_type in self.stream_types
         ]
 
     def ensure_dirs(self) -> None:
@@ -113,4 +111,3 @@ class Settings(BaseSettings):
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings()  # type: ignore[call-arg]
-

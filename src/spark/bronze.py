@@ -1,4 +1,4 @@
-"""Bronze layer: Kafka → S3 raw landing zone. """
+"""Bronze layer: Kafka → S3 raw landing zone."""
 
 from __future__ import annotations
 
@@ -22,12 +22,8 @@ def run_bronze(spark: SparkSession, settings) -> None:
         "maxOffsetsPerTrigger": "50000",
     }
 
-    raw = (
-        spark.readStream.format("kafka")
-        .options(**kafka_options)
-        .load()
-    )
-    
+    raw = spark.readStream.format("kafka").options(**kafka_options).load()
+
     bronze = raw.select(
         F.col("topic"),
         F.col("partition"),

@@ -18,9 +18,7 @@ class DQResult:
     failed_count: int = 0
     total_count: int = 0
     details: str = ""
-    checked_at: datetime = field(
-        default_factory=lambda: datetime.now(tz=timezone.utc)
-    )
+    checked_at: datetime = field(default_factory=lambda: datetime.now(tz=timezone.utc))
 
     @property
     def pass_rate(self) -> float:
